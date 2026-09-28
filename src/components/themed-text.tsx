@@ -1,6 +1,6 @@
-import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
+import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { Fonts, ThemeColor } from '@/constants/theme';
+import { Fonts, PoppinsFonts, ThemeColor } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedTextProps = TextProps & {
@@ -34,40 +34,41 @@ const styles = StyleSheet.create({
   small: {
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: 500,
+    fontFamily: PoppinsFonts.medium,
   },
   smallBold: {
     fontSize: 14,
     lineHeight: 20,
-    fontWeight: 700,
+    fontFamily: PoppinsFonts.bold,
   },
   default: {
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: 500,
+    fontFamily: PoppinsFonts.medium,
   },
   title: {
     fontSize: 48,
-    fontWeight: 600,
+    fontFamily: PoppinsFonts.semibold,
     lineHeight: 52,
   },
   subtitle: {
     fontSize: 32,
     lineHeight: 44,
-    fontWeight: 600,
+    fontFamily: PoppinsFonts.semibold,
   },
   link: {
     lineHeight: 30,
     fontSize: 14,
+    fontFamily: PoppinsFonts.regular,
   },
   linkPrimary: {
     lineHeight: 30,
     fontSize: 14,
     color: '#3c87f7',
+    fontFamily: PoppinsFonts.regular,
   },
   code: {
     fontFamily: Fonts.mono,
-    fontWeight: Platform.select({ android: 700 }) ?? 500,
     fontSize: 12,
   },
 });
