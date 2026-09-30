@@ -136,13 +136,6 @@ interface DashboardAsset {
   productId?: string;
 }
 
-export interface LimitedTimeOfferConfig {
-  title: string;
-  subtitle?: string;
-  ctaLink?: string;
-  imageUrl?: string;
-}
-
 export interface ActiveOffer {
   _id: string;
   title: string;
@@ -256,6 +249,9 @@ export interface Category {
 }
 
 export const api = {
+  registerPushDevice: (payload: { token: string; platform: 'ios' | 'android'; appVersion?: string }) =>
+    request<{ success: boolean }>('/push/devices', { method: 'POST', body: JSON.stringify(payload) }),
+
   login: (email: string, password: string) =>
     request<RawAuthResponse>('/auth/login', {
       method: 'POST',
@@ -274,7 +270,7 @@ export const api = {
       body: JSON.stringify({ accessToken }),
     }).then(mapAuthResponse),
 
-  getDashboard: async (): Promise<{ categories: Category[]; banners: BannerSlide[]; limitedTimeOffers: LimitedTimeOfferConfig | null }> => {
+  getDashboard: async (): Promise<{ categories: Category[]; banners: BannerSlide[]; limitedTimeOfferBanners: BannerSlide[] }> => {
     const res = await request<{ success: boolean; data: DashboardAsset[] }>('/mobile-assets/dashboard');
     const assets = res.data ?? [];
     const categories = assets
@@ -296,18 +292,19 @@ export const api = {
         ctaLink: a.ctaLink,
         order: a.order ?? 0,
       }));
-    const ltoAsset = assets
+    // "Limited-Time Offers" slot in the CMS — a small auto-scrolling strip
+    // shown right below Top Categories, same carousel component/behavior
+    // as the main banner_slider below it.
+    const limitedTimeOfferBanners = assets
       .filter(a => a.slot === 'offers' && a.active !== false)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))[0];
-    const limitedTimeOffers: LimitedTimeOfferConfig | null = ltoAsset
-      ? {
-          title: ltoAsset.title,
-          subtitle: ltoAsset.subtitle,
-          ctaLink: ltoAsset.ctaLink,
-          imageUrl: ltoAsset.imageUrl,
-        }
-      : null;
-    return { categories, banners, limitedTimeOffers };
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      .map(a => ({
+        _id: a._id,
+        imageUrl: a.imageUrl ?? '',
+        ctaLink: a.ctaLink,
+        order: a.order ?? 0,
+      }));
+    return { categories, banners, limitedTimeOfferBanners };
   },
 
   getCartBanner: async (): Promise<BannerSlide | null> => {

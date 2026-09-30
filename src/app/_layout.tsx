@@ -1,11 +1,12 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from '@/context/AuthContext';
 import { BrandingProvider } from '@/context/BrandingContext';
-import { LocationProvider } from '@/context/LocationContext';
+import { LocationProvider, useLocation } from '@/context/LocationContext';
+import { PushNotificationConnector } from '@/components/PushNotificationConnector';
 import { LocationSheet } from '@/components/LocationSheet';
-import { useLocation } from '@/context/LocationContext';
 import { QueryProvider } from '@/providers/QueryProvider';
 import {
   useFonts,
@@ -54,6 +55,7 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <SafeAreaProvider>
       <QueryProvider>
         <AuthProvider>
@@ -62,10 +64,12 @@ export default function RootLayout() {
               <StatusBar style="dark" />
               <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />
               <LocationSheetConnector />
+              <PushNotificationConnector />
             </LocationProvider>
           </BrandingProvider>
         </AuthProvider>
       </QueryProvider>
     </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

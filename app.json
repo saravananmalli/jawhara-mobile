@@ -13,8 +13,7 @@
     },
     "android": {
       "package": "com.jawhara.mobile",
-      "predictiveBackGestureEnabled": true,
-      "edgeToEdgeEnabled": true
+      "predictiveBackGestureEnabled": true
     },
     "web": {
       "output": "static",
@@ -22,6 +21,7 @@
     },
     "plugins": [
       "expo-router",
+      ["expo-notifications", { "color": "#111111" }],
       "expo-location",
       "expo-secure-store",
       [
@@ -34,7 +34,11 @@
           }
         }
       ],
-      "expo-speech-recognition"
+      "expo-speech-recognition",
+      "expo-font",
+      "expo-image",
+      "expo-web-browser",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
